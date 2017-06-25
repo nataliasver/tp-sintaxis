@@ -1,4 +1,2 @@
-Que se yo
-quiero probar algo
-int    main(sasdasdadad){
+int main(int argc, int *argv[]){
 }
