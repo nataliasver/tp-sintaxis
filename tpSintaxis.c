@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#include "funciones.h"
 
 #define LETRA 1
 #define DIGITO 2
@@ -13,11 +14,9 @@
 #define STRINGCHAR 6
 #define CUALQUIERCOSA 7
 
+char *tipoPalabra[] = {"palabraReservada","identificador"};
 
-int tipoDeCaracter(char);
-
-
-int main(int argc, int *argv[]){
+int main(int argc, char *argv[]){
     FILE *farchivo;
     char buffer[200];
     char palabra[32];
@@ -29,7 +28,10 @@ int main(int argc, int *argv[]){
     int cBuffer = 0;
     int lineaArchivo = 0;
 
-    farchivo = fopen((char *)argv[1], "r");
+    //int unTipo = palabraReservada("int");
+
+
+    farchivo = fopen(argv[1], "r");
     if(farchivo == NULL) {
         perror("Error al intentar abrir el archivo");
         return 1;
@@ -37,13 +39,14 @@ int main(int argc, int *argv[]){
 
     banderaFinArch = fgets(buffer, 200, farchivo);
 
+
     while(banderaFinArch != NULL){
         c = buffer[cBuffer];
         banderaEstado = tipoDeCaracter(c);
 
         while(c!= '\0'){
             switch(banderaEstado){
-                case LETRA:
+                case LETRA:                                                                /**Estado de palabra*/
                     palabra[cLetras] = c;
                     cLetras++;
                     cBuffer++;
@@ -51,16 +54,16 @@ int main(int argc, int *argv[]){
                     banderaEstado = tipoDeCaracter(c);
                     if(banderaEstado != LETRA && banderaEstado != DIGITO){
                         palabra[cLetras]= '\0';
-                        printf("%s; %d; indentificador\n",palabra, lineaArchivo);
+                        imprimirEn(argc, lineaArchivo, tipoPalabra[palabraReservada(palabra)], palabra, argv);
                         cLetras = 0;
                         break;
                     }
-                    if(banderaEstado == DIGITO){  /*Una identificador puede contener digitos*/
+                    if(banderaEstado == DIGITO){  /*Un identificador puede contener digitos*/
                         banderaEstado = LETRA;
                     }
                     break;
                 case CUALQUIERCOSA:
-                    printf("Esto es otra cosa\n");
+                    imprimirEn(argc, lineaArchivo, "otracosa","cualquiercosa", argv);
                     cBuffer++;
                     c = buffer[cBuffer];
                     banderaEstado = tipoDeCaracter(c);
@@ -73,24 +76,10 @@ int main(int argc, int *argv[]){
     }
 
     fclose(farchivo);
-
     printf("LECTURA FINALIZADA - Pulse una tecla para salir del programa\n");
-    getch();
-
-
+    getchar();
     return 0;
 }
 
-int tipoDeCaracter(char c){
-    char banderaEstado;
-    if(isupper(c) || islower(c) || c == '_'){
-        banderaEstado = LETRA;
-    }
-    else if(isdigit(c)){
-        banderaEstado = DIGITO;
-    }
-    else{
-        banderaEstado = CUALQUIERCOSA;
-    }
-    return banderaEstado;
-}
+
+
