@@ -77,6 +77,7 @@ int main(int argc, char *argv[]){
                         cBuffer++;
                         c = buffer[cBuffer];
                         banderaEstado = tipoDeCaracter(c);
+                        cLetras = 0;
                     }
                     break;
                 case CUALQUIERCOSA:
