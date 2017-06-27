@@ -18,17 +18,14 @@ char *tipoPalabra[] = {"palabraReservada","identificador"};
 
 int main(int argc, char *argv[]){
     FILE *farchivo;
-    char buffer[200];
+    char buffer[500];
     char palabra[32];
-    char *banderaFinArch = NULL;
     char c;
     char banderaEstado;
 
     int cLetras = 0;
     int cBuffer = 0;
     int lineaArchivo = 0;
-
-    //int unTipo = palabraReservada("int");
 
 
     farchivo = fopen(argv[1], "r");
@@ -37,13 +34,9 @@ int main(int argc, char *argv[]){
         return 1;
     }
 
-    banderaFinArch = fgets(buffer, 200, farchivo);
-
-
-    while(banderaFinArch != NULL){
+    while(fgets(buffer, 500, farchivo)!= NULL){
         c = buffer[cBuffer];
         banderaEstado = tipoDeCaracter(c);
-
         while(c!= '\0'){
             switch(banderaEstado){
                 case LETRA:                                                                /**Estado de palabra*/
@@ -62,8 +55,15 @@ int main(int argc, char *argv[]){
                         banderaEstado = LETRA;
                     }
                     break;
+                case PUNTUACION:
+                    palabra[0] = c;
+                    palabra[1] = '\0';
+                    imprimirEn(argc, lineaArchivo, "caracterPuntuacion", palabra, argv);
+                    cBuffer++;
+                    c = buffer[cBuffer];
+                    banderaEstado = tipoDeCaracter(c);
+                    break;
                 case CUALQUIERCOSA:
-                    imprimirEn(argc, lineaArchivo, "otracosa","cualquiercosa", argv);
                     cBuffer++;
                     c = buffer[cBuffer];
                     banderaEstado = tipoDeCaracter(c);
@@ -71,8 +71,8 @@ int main(int argc, char *argv[]){
 
             }
         }
-        banderaFinArch = fgets(buffer, 200, farchivo);
         lineaArchivo++;
+        cBuffer = 0;
     }
 
     fclose(farchivo);

@@ -58,6 +58,9 @@ int tipoDeCaracter(char c){
     else if(isdigit(c)){
         banderaEstado = DIGITO;
     }
+    else if(c == '{' || c == '}' || c == ';'){
+        banderaEstado = PUNTUACION;
+    }
     else{
         banderaEstado = CUALQUIERCOSA;
     }
