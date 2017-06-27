@@ -21,7 +21,21 @@
 #define DDCH 12         /*Dentro de Char*/
 
 char *pReservadas[] = {"auto","break","case","char","const","continue","default","do","double","else","enum","extern","float","for","goto","if","int","long","register","return","short","signed","sizeof","static","struct","switch","typedef","union","unsigned","void","volatile","while"};
+char operadores[]= {'!','~','^','*','/','%','&','>','<','|','?',':','=',','};
+
 int estadoString = FCCS;
+
+int esOperador(char c){
+    int i = 0;
+    while(i<= 13 ){
+        if(c == operadores[i]){
+            return 1;
+        }
+        i++;
+    }
+    return 0;
+
+}
 
 int palabraReservada(char* palabra){
     int i = 0;
@@ -74,6 +88,9 @@ int tipoDeCaracter(char c){
     else if(c == '\''){
         banderaEstado = STRINGCHAR;
         estadoString = DDCH;
+    }
+    else if(esOperador(c)){
+        banderaEstado = OPERADOR;
     }
     else{
         banderaEstado = CUALQUIERCOSA;

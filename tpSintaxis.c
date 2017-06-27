@@ -22,8 +22,8 @@ int main(int argc, char *argv[]){
     char palabra[32];
     char c;
     char banderaEstado;
-    char banderaReservada = 0;
-    char banderaIdentificador = 0;
+    char banderaEstPreAnterior = CUALQUIERCOSA;
+    char banderaEstAnterior = CUALQUIERCOSA;
 
     int cLetras = 0;
     int cBuffer = 0;
@@ -77,6 +77,36 @@ int main(int argc, char *argv[]){
                         cBuffer++;
                         c = buffer[cBuffer];
                         banderaEstado = tipoDeCaracter(c);
+                        cLetras = 0;
+                    }
+                    break;
+                case OPERADOR:
+                    palabra[0]=c;
+                    cLetras++;
+                    cBuffer++;
+                    c = buffer[cBuffer];
+                    if(esOperador(c)){
+                        palabra[1]=c;
+                        palabra[2]='\0';
+                        cBuffer++;
+                        c = buffer[cBuffer];
+                    }
+                    else{
+                        palabra[1]='\0';
+                    }
+                    imprimirEn(argc, lineaArchivo, "operador", palabra, argv);
+                    banderaEstado = tipoDeCaracter(c);
+                    cLetras = 0;
+                    break;
+                case DIGITO:
+                    palabra[cLetras] = c;
+                    cLetras++;
+                    cBuffer++;
+                    c = buffer[cBuffer];
+                    banderaEstado = tipoDeCaracter(c);
+                    if(banderaEstado != DIGITO){
+                        palabra[cLetras] = '\0';
+                        imprimirEn(argc, lineaArchivo, "literalNumero", palabra, argv);
                         cLetras = 0;
                     }
                     break;
