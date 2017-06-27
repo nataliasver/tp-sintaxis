@@ -14,7 +14,7 @@
 #define STRINGCHAR 6
 #define CUALQUIERCOSA 7
 
-char *tipoPalabra[] = {"palabraReservada","identificador"};
+char *tipoPalabra[] = {"palabraReservada","identificador","operador"};
 
 int main(int argc, char *argv[]){
     FILE *farchivo;
@@ -22,11 +22,12 @@ int main(int argc, char *argv[]){
     char palabra[32];
     char c;
     char banderaEstado;
+    char banderaReservada = 0;
+    char banderaIdentificador = 0;
 
     int cLetras = 0;
     int cBuffer = 0;
     int lineaArchivo = 0;
-
 
     farchivo = fopen(argv[1], "r");
     if(farchivo == NULL) {
@@ -62,6 +63,21 @@ int main(int argc, char *argv[]){
                     cBuffer++;
                     c = buffer[cBuffer];
                     banderaEstado = tipoDeCaracter(c);
+                    break;
+                case STRINGCHAR:
+                    palabra[cLetras] = c;
+                    cLetras++;
+                    cBuffer++;
+                    c = buffer[cBuffer];
+                    if(esStringOChar(c) == 0){                       /*Encuentro el " o un ' final, y salgo del String o Char*/
+                        palabra[cLetras] = c;
+                        cLetras++;
+                        palabra[cLetras] = '\0';
+                        imprimirEn(argc, lineaArchivo, "literalCadena", palabra, argv);
+                        cBuffer++;
+                        c = buffer[cBuffer];
+                        banderaEstado = tipoDeCaracter(c);
+                    }
                     break;
                 case CUALQUIERCOSA:
                     cBuffer++;
