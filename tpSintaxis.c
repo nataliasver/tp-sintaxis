@@ -10,9 +10,8 @@
 #define DIGITO 2
 #define OPERADOR 3
 #define PUNTUACION 4
-#define ESPACIO 5
-#define STRINGCHAR 6
-#define CUALQUIERCOSA 7
+#define STRINGCHAR 5
+#define CUALQUIERCOSA 6
 
 char *tipoPalabra[] = {"palabraReservada","identificador","operador"};
 
@@ -22,8 +21,10 @@ int main(int argc, char *argv[]){
     char palabra[32];
     char c;
     char banderaEstado;
-    char banderaEstPreAnterior = CUALQUIERCOSA;
-    char banderaEstAnterior = CUALQUIERCOSA;
+
+    char banderaPrimeraPalabra = 0;
+    char banderaPalabraReservada = -1;
+
 
     int cLetras = 0;
     int cBuffer = 0;
@@ -34,13 +35,16 @@ int main(int argc, char *argv[]){
         perror("Error al intentar abrir el archivo");
         return 1;
     }
-
     while(fgets(buffer, 500, farchivo)!= NULL){
+        palabra[0] = '\0';
         c = buffer[cBuffer];
         banderaEstado = tipoDeCaracter(c);
         while(c!= '\0'){
             switch(banderaEstado){
                 case LETRA:                                                                /**Estado de palabra*/
+                    if (palabra[0] == '\0'){
+                        banderaPrimeraPalabra = 1;
+                    }
                     palabra[cLetras] = c;
                     cLetras++;
                     cBuffer++;
@@ -49,6 +53,10 @@ int main(int argc, char *argv[]){
                     if(banderaEstado != LETRA && banderaEstado != DIGITO){
                         palabra[cLetras]= '\0';
                         imprimirEn(argc, lineaArchivo, tipoPalabra[palabraReservada(palabra)], palabra, argv);
+                        if(banderaPrimeraPalabra){
+                            banderaPalabraReservada = palabraReservada(palabra);
+                            banderaPrimeraPalabra = 0;
+                        }
                         cLetras = 0;
                         break;
                     }
@@ -59,7 +67,15 @@ int main(int argc, char *argv[]){
                 case PUNTUACION:
                     palabra[0] = c;
                     palabra[1] = '\0';
-                    imprimirEn(argc, lineaArchivo, "caracterPuntuacion", palabra, argv);
+                    if(c == '(' || c == ')' || c == '[' || c == ']'){
+                        if(banderaPalabraReservada == 0 ){
+                            imprimirEn(argc, lineaArchivo, "caracterPuntuacion", palabra, argv);
+                        }
+                        else{
+                            imprimirEn(argc, lineaArchivo, "operador", palabra, argv);
+                        }
+
+                    }
                     cBuffer++;
                     c = buffer[cBuffer];
                     banderaEstado = tipoDeCaracter(c);
@@ -94,7 +110,17 @@ int main(int argc, char *argv[]){
                     else{
                         palabra[1]='\0';
                     }
-                    imprimirEn(argc, lineaArchivo, "operador", palabra, argv);
+                    if(!strcmp(palabra, "=")){
+                        if(banderaPalabraReservada == 0){
+                            imprimirEn(argc, lineaArchivo, "caracterPuntuacion", palabra, argv);
+                        }
+                        else{
+                            imprimirEn(argc, lineaArchivo, "operador", palabra, argv);
+                        }
+                    }
+                    else{
+                        imprimirEn(argc, lineaArchivo, "operador", palabra, argv);
+                    }
                     banderaEstado = tipoDeCaracter(c);
                     cLetras = 0;
                     break;
@@ -120,6 +146,8 @@ int main(int argc, char *argv[]){
         }
         lineaArchivo++;
         cBuffer = 0;
+        banderaPrimeraPalabra = 0;
+        banderaPalabraReservada = -1;
     }
 
     fclose(farchivo);

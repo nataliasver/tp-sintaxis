@@ -10,15 +10,14 @@
 #define DIGITO 2
 #define OPERADOR 3
 #define PUNTUACION 4
-#define ESPACIO 5
-#define STRINGCHAR 6
-#define CUALQUIERCOSA 7
+#define STRINGCHAR 5
+#define CUALQUIERCOSA 6
 
-#define DDS 8           /*Dentro de String*/
-#define FCCS 9          /*Fin Case Caracter y String */
-#define CEDDS 10        /*Caracter Especial dentro de String*/
-#define CECH 11         /*Caracter Especial dentro de Char*/
-#define DDCH 12         /*Dentro de Char*/
+#define DDS 7           /*Dentro de String*/
+#define FCCS 8          /*Fin Case Caracter y String */
+#define CEDDS 9        /*Caracter Especial dentro de String*/
+#define CECH 10         /*Caracter Especial dentro de Char*/
+#define DDCH 11         /*Dentro de Char*/
 
 char *pReservadas[] = {"auto","break","case","char","const","continue","default","do","double","else","enum","extern","float","for","goto","if","int","long","register","return","short","signed","sizeof","static","struct","switch","typedef","union","unsigned","void","volatile","while"};
 char operadores[]= {'!','~','^','*','/','%','&','>','<','|','?',':','=',','};
@@ -78,7 +77,7 @@ int tipoDeCaracter(char c){
     else if(isdigit(c)){
         banderaEstado = DIGITO;
     }
-    else if(c == '{' || c == '}' || c == ';'){
+    else if(c == '{' || c == '}' || c == ';'|| c == ',' || c == '[' || c == ']' || c == '(' || c == ')'){
         banderaEstado = PUNTUACION;
     }
     else if(c == '\"'){
