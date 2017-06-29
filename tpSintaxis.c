@@ -35,6 +35,7 @@ int main(int argc, char *argv[]){
         perror("Error al intentar abrir el archivo");
         return 1;
     }
+
     while(fgets(buffer, 500, farchivo)!= NULL){
         palabra[0] = '\0';
         c = buffer[cBuffer];
@@ -75,6 +76,9 @@ int main(int argc, char *argv[]){
                             imprimirEn(argc, lineaArchivo, "operador", palabra, argv);
                         }
 
+                    }
+                    else{
+                        imprimirEn(argc, lineaArchivo, "caracterPuntuacion", palabra, argv);
                     }
                     cBuffer++;
                     c = buffer[cBuffer];

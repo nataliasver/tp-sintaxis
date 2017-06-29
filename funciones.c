@@ -53,7 +53,7 @@ void imprimirEn(int cArgv, int linea, char* tipo, char* palabra, char*argv[]){
     if(cArgv == 3)
         imprimirEnArchivo((char*)argv[2], linea, tipo, palabra);
     else
-        printf("%s; %d; %s\n",palabra, linea,tipo);
+        printf(" %d; %s; %s\n", linea,palabra,tipo);
 
 }
 
@@ -64,7 +64,7 @@ void imprimirEnArchivo(char *rutaArchivo, int linea, char*tipo, char*palabra){
         perror("Error al intentar abrir el archivo");
         return;
     }
-    fprintf(farchivo, "%s;%d;%s\n",palabra,linea,tipo);
+    fprintf(farchivo, " %d; %s; %s\n",linea,palabra,tipo);
     fclose(farchivo);
 }
 
